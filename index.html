@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg: #101226;
+            --bg-2: #1a1d37;
+            --panel: #1f223e;
+            --panel-2: #232747;
+            --line: #3a3f61;
+            --line-soft: #2d3250;
+            --text: #d8def8;
+            --sub: #9ca4c9;
+            --accent: #6fa8ff;
+            --accent-2: #5fcce9;
+            --good: #67d28a;
+            --danger: #dd6f7a;
+            --shadow: 0 10px 26px rgba(2, 5, 18, 0.35);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 20% 0%, rgba(111, 168, 255, 0.14), transparent 32%),
+                radial-gradient(circle at 90% 0%, rgba(95, 204, 233, 0.1), transparent 26%),
+                linear-gradient(180deg, #101226 0%, #11152e 40%, #101226 100%);
+            font-family: "Segoe UI", "Noto Sans", sans-serif;
+        }
+
+        #toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(18, 21, 43, 0.95);
+            backdrop-filter: blur(4px);
+        }
+
+        .brand {
+            font-size: 28px;
+            font-weight: 800;
+            margin-right: 10px;
+            color: #cfd6f8;
+        }
+
+        .btn {
+            border: 1px solid #4a5077;
+            background: linear-gradient(180deg, #2c3155, #252949);
+            color: var(--text);
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 7px 12px;
+            cursor: pointer;
+            transition: transform .12s ease, filter .12s ease;
+        }
+
+        .btn:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg, #3c75d4, #2c5db0);
+            border-color: #4a88ef;
+            color: #ebf4ff;
+        }
+
+        .btn-danger {
+            border-color: #875462;
+            background: linear-gradient(180deg, #613744, #4b2b35);
+            color: #ffdce2;
+        }
+
+        .btn-subtle {
+            border-color: #3e4366;
+            background: #232744;
+            color: #aeb7df;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            border: 1px solid #4b5070;
+            background: #1a1e37;
+            color: var(--text);
+            border-radius: 3px;
+            padding: 8px 10px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 72px;
+        }
+
+        .small {
+            font-size: 12px;
+            color: var(--sub);
+        }
+
+        #tabs {
+            display: flex;
+            gap: 2px;
+            padding: 8px 12px 0;
+            background: #12152b;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .tab {
+            border: 1px solid var(--line);
+            border-bottom: 0;
+            background: #262a48;
+            color: #cad3f7;
+            padding: 7px 14px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: #30355b;
+            color: #fff;
+        }
+
+        .view {
+            flex: 1;
+            min-height: 0;
+            display: none;
+            padding: 14px;
+            background: linear-gradient(180deg, rgba(31, 34, 62, 0.22), rgba(18, 22, 43, 0.12));
+        }
+
+        .view.active { display: block; }
+
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 14px;
+            align-content: start;
+            height: 100%;
+            overflow: auto;
+            padding-right: 2px;
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, #1f2341, #191d37);
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: 72px 1fr auto;
+            gap: 12px;
+            padding: 12px;
+            align-items: center;
+            box-shadow: var(--shadow);
+            transition: border-color .15s ease, transform .15s ease;
+        }
+
+        .card:hover {
+            border-color: #526293;
+            transform: translateY(-2px);
+        }
+
+        .icon {
+            width: 64px;
+            height: 64px;
+            border: 1px solid #4e557e;
+            border-radius: 4px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background: #1a1c31;
+            font-weight: 800;
+            color: #c2c9ed;
+        }
+
+        .icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-title {
+            font-size: 19px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+        .card-meta {
+            font-size: 13px;
+            color: var(--sub);
+        }
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 2px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .3px;
+            color: #e6edff;
+            background: #2b3f70;
+            border: 1px solid #4b6cad;
+            border-radius: 999px;
+            padding: 2px 8px;
+        }
+
+        .card-actions {
+            display: grid;
+            gap: 8px;
+            width: 126px;
+        }
+
+        .bar {
+            margin-top: 8px;
+            height: 8px;
+            border: 1px solid #4a5074;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #15182d;
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent));
+            transition: width .2s;
+        }
+
+        .bar-fill.indeterminate {
+            width: 100% !important;
+            background: repeating-linear-gradient(
+                90deg,
+                rgba(111, 168, 255, 0.35) 0,
+                rgba(111, 168, 255, 0.35) 12px,
+                rgba(95, 204, 233, 0.95) 12px,
+                rgba(95, 204, 233, 0.95) 24px
+            );
+            background-size: 200% 100%;
+            animation: progressPulse 1.1s linear infinite;
+        }
+
+        @keyframes progressPulse {
+            from { background-position: 0 0; }
+            to { background-position: -48px 0; }
+        }
+
+        #logPanel {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #12152a;
+            height: calc(100% - 44px);
+            overflow: auto;
+            padding: 10px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            color: #8de2a7;
+            white-space: pre-wrap;
+            font-size: 12px;
+            line-height: 1.35;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0 0 10px;
+        }
+
+        .accounts-list {
+            display: grid;
+            gap: 8px;
+            max-width: 880px;
+        }
+
+        .account-row {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: linear-gradient(180deg, #1f2341, #191d37);
+            padding: 12px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 6, 12, 0.78);
+            display: none;
+            z-index: 30;
+        }
+
+        #modal {
+            position: fixed;
+            width: min(1120px, calc(100vw - 30px));
+            max-height: calc(100vh - 30px);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 40;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #191d37;
+            display: none;
+            overflow: hidden;
+            box-shadow: 0 22px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--line);
+            background: #161a31;
+            padding: 10px 12px;
+        }
+
+        #modalTitle {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        #modalTabs {
+            display: flex;
+            gap: 2px;
+            padding: 10px 10px 0;
+            background: #171b33;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .m-tab {
+            border: 1px solid var(--line);
+            border-bottom: 0;
+            background: #252a49;
+            color: #c3cbf0;
+            padding: 7px 12px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .m-tab.active {
+            background: #30365b;
+            color: #fff;
+        }
+
+        #modalBody {
+            padding: 12px;
+            max-height: calc(100vh - 260px);
+            overflow: auto;
+        }
+
+        .m-panel { display: none; }
+        .m-panel.active { display: block; }
+
+        .panel-box {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #191d35;
+        }
+
+        .panel-box h4 {
+            margin: 0 0 8px;
+            font-size: 14px;
+            color: #cad3f4;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .row3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        label {
+            display: block;
+            color: var(--sub);
+            margin: 8px 0 5px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+
+        .checks {
+            display: grid;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #cdd6f7;
+            font-size: 16px;
+        }
+
+        .check input { width: 16px; height: 16px; }
+
+        .modal-actions {
+            border-top: 1px solid var(--line);
+            background: #14182f;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 10px;
+        }
+
+        .content-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .mini-tab {
+            border: 1px solid #4a5077;
+            background: #262b4a;
+            color: #c3cbee;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+
+        .mini-tab.active {
+            background: #33508a;
+            border-color: #4778cf;
+            color: #fff;
+        }
+
+        .table {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .thead, .trow {
+            display: grid;
+            grid-template-columns: 1fr 120px 180px;
+            align-items: center;
+        }
+
+        .thead {
+            background: #252a49;
+            border-bottom: 1px solid var(--line);
+            font-weight: 700;
+            color: #c7cff1;
+        }
+
+        .thead > div, .trow > div { padding: 7px 9px; }
+
+        .tbody {
+            max-height: 270px;
+            overflow: auto;
+            background: #171b33;
+        }
+
+        .trow {
+            border-bottom: 1px solid #2c3151;
+            color: #c6ceef;
+            cursor: pointer;
+        }
+
+        .trow:nth-child(2n) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .trow:hover { background: #212743; }
+        .trow.active { background: #2f3960; }
+
+        .empty-state {
+            display: grid;
+            place-items: center;
+            text-align: center;
+            border: 1px dashed var(--line);
+            border-radius: 10px;
+            min-height: 180px;
+            color: var(--sub);
+            background: rgba(20, 24, 46, 0.42);
+            padding: 24px;
+        }
+
+        @media (max-width: 900px) {
+            #toolbar { flex-wrap: wrap; }
+            #grid { grid-template-columns: 1fr; }
+            .card { grid-template-columns: 64px 1fr; }
+            .card-actions { grid-column: 1 / span 2; grid-template-columns: 1fr 1fr; width: 100%; }
+            .row, .row3 { grid-template-columns: 1fr; }
+            .thead, .trow { grid-template-columns: 1fr 90px 120px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+<div id="toolbar">
+    <div class="brand">Kebab Launcher</div>
+    <button class="btn btn-primary" onclick="showModal('new')">Add Instance</button>
+    <button class="btn" onclick="importModpackQuick()">Import Modpack</button>
+    <div style="flex: 1;"></div>
+
+    <select id="accountSelect" style="width: 250px;" onchange="setActiveAccountFromSelect()"></select>
+    <button class="btn" onclick="login()">Add Account</button>
+    <button class="btn btn-danger" onclick="removeActiveAccount()">Remove</button>
+</div>
+
+<div id="tabs">
+    <button class="tab active" id="tab-instances" onclick="switchTab('instances')">Instances</button>
+    <button class="tab" id="tab-logs" onclick="switchTab('logs')">Logs</button>
+    <button class="tab" id="tab-accounts" onclick="switchTab('accounts')">Accounts</button>
+    <button class="tab" id="tab-settings" onclick="switchTab('settings')">Settings</button>
+</div>
+
+<div class="view active" id="view-instances">
+    <div id="grid"></div>
+</div>
+
+<div class="view" id="view-logs">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div class="section-title">Launcher Logs</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <label style="margin:0; text-transform:none;">Auto-scroll</label>
+            <input id="autoScrollLogs" type="checkbox" checked style="width:16px; height:16px;">
+            <button class="btn" onclick="clearLogs()">Clear</button>
+        </div>
+    </div>
+    <div id="logPanel"></div>
+</div>
+
+<div class="view" id="view-accounts">
+    <div class="section-title">Accounts</div>
+    <div class="small" style="margin-bottom:10px;">Add multiple Microsoft accounts and choose which one is active for launch.</div>
+    <div class="accounts-list" id="accountsList"></div>
+</div>
+
+<div class="view" id="view-settings">
+    <div class="section-title">Settings</div>
+    <div class="panel-box" style="max-width:900px;">
+        <h4>Minecraft Commands</h4>
+        <div class="small">Each instance has command fields under Edit Instance -> Commands.</div>
+        <div class="small" style="margin-top:8px;">Available env vars: `INST_NAME`, `INST_ID`, `INST_DIR`, `INST_MC_DIR`.</div>
+    </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeModal()"></div>
+
+<div id="modal">
+    <div class="modal-head">
+        <h2 id="modalTitle">Instance</h2>
+        <button class="btn btn-subtle" onclick="closeModal()">Close</button>
+    </div>
+
+    <div id="modalTabs">
+        <button class="m-tab active" id="m-tab-general" onclick="switchModalTab('general')">General</button>
+        <button class="m-tab" id="m-tab-java" onclick="switchModalTab('java')">Java</button>
+        <button class="m-tab" id="m-tab-commands" onclick="switchModalTab('commands')">Custom Commands</button>
+        <button class="m-tab" id="m-tab-content" onclick="switchModalTab('content')">Content</button>
+    </div>
+
+    <div id="modalBody">
+        <div class="m-panel active" id="m-panel-general">
+            <div class="panel-box">
+                <h4>General</h4>
+                <label>Instance Name</label>
+                <input id="mName" type="text" placeholder="my_instance">
+
+                <div id="versionRow">
+                    <label>Minecraft Version</label>
+                    <select id="mVer"></select>
+                </div>
+
+                <div class="checks">
+                    <label class="check"><input id="mFabric" type="checkbox" checked> Use Fabric Loader</label>
+                </div>
+
+                <div class="row" style="margin-top:10px;">
+                    <button class="btn" id="iconBtn" onclick="chooseIconForInstance()">Set Custom Icon</button>
+                    <button class="btn" id="importModpackBtn" onclick="importModpackFromModal()">Import .mrpack Into New Instance</button>
+                </div>
+                <div class="small" id="iconHint" style="margin-top:6px;">Custom icon is available after instance creation.</div>
+            </div>
+
+            <div class="panel-box">
+                <h4>Instance Window + Console</h4>
+                <div class="checks">
+                    <label class="check"><input id="mShowConsoleOnLaunch" type="checkbox"> Show logs tab when launch starts</label>
+                    <label class="check"><input id="mShowConsoleOnCrash" type="checkbox" checked> Show logs tab on crash</label>
+                    <label class="check"><input id="mCloseLauncherOnLaunch" type="checkbox"> Hide launcher while game is running (planned)</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-panel" id="m-panel-java">
+            <div class="panel-box">
+                <h4>Memory</h4>
+                <div class="row">
+                    <div>
+                        <label>Min Memory</label>
+                        <input id="mMemMin" type="text" placeholder="2G">
+                    </div>
+                    <div>
+                        <label>Max Memory</label>
+                        <input id="mMemMax" type="text" placeholder="4G">
+                    </div>
+                </div>
+                <div class="small" style="margin-top:6px;">Examples: `2G`, `4096M`.</div>
+            </div>
+
+            <div class="panel-box">
+                <h4>Java Arguments</h4>
+                <label>Custom JVM Args</label>
+                <input id="mJvmArgs" type="text" placeholder="-XX:+UseG1GC">
+            </div>
+        </div>
+
+        <div class="m-panel" id="m-panel-commands">
+            <div class="panel-box">
+                <h4>Launch Commands</h4>
+                <label>Pre-launch Command</label>
+                <input id="mPreLaunchCommand" type="text" placeholder="echo starting $INST_NAME">
+
+                <label>Wrapper Command (stored only)</label>
+                <input id="mWrapperCommand" type="text" placeholder="Optional wrapper command">
+
+                <label>Post-exit Command</label>
+                <input id="mPostExitCommand" type="text" placeholder="echo done $INST_NAME">
+            </div>
+
+            <div class="panel-box">
+                <h4>Environment Variables</h4>
+                <label>One per line: KEY=VALUE</label>
+                <textarea id="mEnvVars" placeholder="EXAMPLE=hello\nDEBUG=true"></textarea>
+            </div>
+        </div>
+
+        <div class="m-panel" id="m-panel-content">
+            <div class="panel-box">
+                <h4>Mods / Resource Packs / Shader Packs</h4>
+                <div id="contentDisabledHint" class="small" style="margin-bottom:10px; display:none;">Save the instance first to manage content.</div>
+
+                <div class="content-tabs">
+                    <button class="mini-tab active" id="content-tab-mods" onclick="setContentType('mods')">Mods</button>
+                    <button class="mini-tab" id="content-tab-resourcepacks" onclick="setContentType('resourcepacks')">Resource Packs</button>
+                    <button class="mini-tab" id="content-tab-shaderpacks" onclick="setContentType('shaderpacks')">Shader Packs</button>
+                </div>
+
+                <div style="display:flex; gap:8px; margin-bottom:10px;">
+                    <button class="btn" onclick="importSelectedContent()">Import</button>
+                    <button class="btn btn-danger" onclick="removeSelectedContent()">Remove</button>
+                    <button class="btn btn-subtle" onclick="openSelectedContentFolder()">Open Folder</button>
+                    <button class="btn btn-subtle" onclick="refreshSelectedContent()">Refresh</button>
+                </div>
+
+                <div class="table">
+                    <div class="thead">
+                        <div>Name</div>
+                        <div>Size</div>
+                        <div>Last Modified</div>
+                    </div>
+                    <div class="tbody" id="contentBody"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-actions">
+        <button class="btn btn-subtle" id="openFolderBtn" onclick="openInstanceFolder()">Open Folder</button>
+        <button class="btn btn-danger" id="deleteBtn" onclick="deleteInstance()">Delete</button>
+        <button class="btn btn-primary" onclick="saveInstance()">Save</button>
+    </div>
+</div>
+
+<script>
+    const { ipcRenderer } = require('electron');
+    const axios = require('axios');
+    const path = require('path');
+
+    let data = {
+        path: null,
+        instances: [],
+        accounts: [],
+        msToken: null,
+        activeAccountUuid: null
+    };
+
+    let activeLaunchIdx = -1;
+    let logs = [];
+    let activeTab = 'instances';
+
+    let editingIdx = 'new';
+    let modalTab = 'general';
+    let currentContentType = 'mods';
+    let currentContentFiles = [];
+    let selectedContentFile = null;
+
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function formatBytes(bytes) {
+        if (!bytes) return '0 B';
+        const units = ['B', 'KB', 'MB', 'GB'];
+        let size = bytes;
+        let unit = 0;
+        while (size >= 1024 && unit < units.length - 1) {
+            size /= 1024;
+            unit += 1;
+        }
+        return `${size.toFixed(unit === 0 ? 0 : 1)} ${units[unit]}`;
+    }
+
+    function formatDate(ms) {
+        if (!ms) return '-';
+        return new Date(ms).toLocaleString();
+    }
+
+    function withDefaults(inst) {
+        return {
+            loaderType: inst?.fabric ? 'fabric' : 'vanilla',
+            loaderVersion: '',
+            memoryMin: '2G',
+            memoryMax: '4G',
+            jvmArgs: '',
+            preLaunchCommand: '',
+            postExitCommand: '',
+            wrapperCommand: '',
+            showConsoleOnLaunch: false,
+            showConsoleOnCrash: true,
+            closeLauncherOnLaunch: false,
+            envVars: {},
+            ...inst
+        };
+    }
+
+    function serializeEnvVars(env) {
+        const entries = Object.entries(env || {});
+        return entries.map(([k, v]) => `${k}=${v}`).join('\n');
+    }
+
+    function parseEnvVars(text) {
+        const env = {};
+        const lines = String(text || '').split(/\r?\n/);
+
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed || !trimmed.includes('=')) continue;
+            const idx = trimmed.indexOf('=');
+            const key = trimmed.slice(0, idx).trim();
+            const value = trimmed.slice(idx + 1).trim();
+            if (key) env[key] = value;
+        }
+
+        return env;
+    }
+
+    async function init() {
+        const raw = await ipcRenderer.invoke('get-data');
+        data = {
+            ...raw,
+            instances: (raw.instances || []).map(withDefaults),
+            accounts: raw.accounts || []
+        };
+
+        renderInstances();
+        renderAccounts();
+        renderAccountSelect();
+    }
+
+    async function fetchVersions() {
+        const res = await axios.get('https://launchermeta.mojang.com/mc/game/version_manifest.json');
+        const sel = document.getElementById('mVer');
+        sel.innerHTML = '';
+
+        res.data.versions
+            .filter((entry) => entry.type === 'release')
+            .forEach((entry) => {
+                const opt = document.createElement('option');
+                opt.value = entry.id;
+                opt.innerText = entry.id;
+                sel.appendChild(opt);
+            });
+
+        sel.value = '1.21.1';
+    }
+
+    function switchTab(tab) {
+        activeTab = tab;
+        ['instances', 'logs', 'accounts', 'settings'].forEach((name) => {
+            document.getElementById(`tab-${name}`).classList.toggle('active', name === tab);
+            document.getElementById(`view-${name}`).classList.toggle('active', name === tab);
+        });
+    }
+
+    function renderInstances() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+
+        if (!data.instances.length) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <div>
+                        <div style="font-size:20px; font-weight:800; color:var(--text); margin-bottom:6px;">No Instances Yet</div>
+                        <div>Click <b>Add Instance</b> or <b>Import Modpack</b> to get started.</div>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        data.instances.forEach((rawInst, idx) => {
+            const inst = withDefaults(rawInst);
+            const isLaunching = activeLaunchIdx === idx;
+            const loaderLabel = inst.loaderType ? inst.loaderType.toUpperCase() : (inst.fabric ? 'FABRIC' : 'VANILLA');
+            const loaderDetails = inst.loaderVersion ? ` ${inst.loaderVersion}` : '';
+
+            const iconHtml = inst.iconAbsolutePath
+                ? `<img src="file://${encodeURI(inst.iconAbsolutePath)}" alt="icon">`
+                : `<span>${inst.fabric ? 'F' : 'V'}</span>`;
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="icon">${iconHtml}</div>
+                <div>
+                    <div class="card-title">${escapeHtml(inst.name)}</div>
+                    <div class="meta-row">
+                        <span class="badge">${escapeHtml(loaderLabel + loaderDetails)}</span>
+                        <span class="card-meta">Minecraft ${escapeHtml(inst.version)}</span>
+                    </div>
+                    <div class="card-meta">RAM ${escapeHtml(inst.memoryMin)} - ${escapeHtml(inst.memoryMax)}</div>
+                    <div class="bar" style="display:${isLaunching ? 'block' : 'none'}"><div class="bar-fill" id="fill-${idx}"></div></div>
+                    <div class="small" id="status-${idx}" style="margin-top:6px; display:${isLaunching ? 'block' : 'none'}">Launching...</div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-primary" onclick="launch(${idx})" ${isLaunching ? 'disabled' : ''}>${isLaunching ? 'RUNNING' : 'Play'}</button>
+                    <button class="btn" onclick="showModal(${idx})">Edit</button>
+                </div>
+            `;
+
+            grid.appendChild(card);
+        });
+    }
+
+    function renderLogPanel() {
+        const panel = document.getElementById('logPanel');
+        panel.textContent = logs.join('\n');
+
+        if (document.getElementById('autoScrollLogs').checked) {
+            panel.scrollTop = panel.scrollHeight;
+        }
+    }
+
+    function clearLogs() {
+        logs = [];
+        renderLogPanel();
+    }
+
+    function renderAccountSelect() {
+        const sel = document.getElementById('accountSelect');
+        sel.innerHTML = '';
+
+        if (!data.accounts.length) {
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.innerText = 'No account selected';
+            sel.appendChild(opt);
+            return;
+        }
+
+        data.accounts.forEach((account) => {
+            const opt = document.createElement('option');
+            opt.value = account.uuid;
+            opt.innerText = account.name;
+            sel.appendChild(opt);
+        });
+
+        sel.value = data.activeAccountUuid || data.accounts[0].uuid;
+    }
+
+    function renderAccounts() {
+        const root = document.getElementById('accountsList');
+        root.innerHTML = '';
+
+        if (!data.accounts.length) {
+            root.innerHTML = '<div class="small">No accounts yet.</div>';
+            return;
+        }
+
+        data.accounts.forEach((account) => {
+            const active = account.uuid === data.activeAccountUuid;
+            const row = document.createElement('div');
+            row.className = 'account-row';
+            row.innerHTML = `
+                <div>
+                    <div style="font-size:18px; font-weight:700;">${escapeHtml(account.name)} ${active ? '<span style="color:#88d1ff">(active)</span>' : ''}</div>
+                    <div class="small">UUID: ${escapeHtml(account.uuid)}</div>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn" onclick="setActiveAccount('${account.uuid}')">Set Active</button>
+                    <button class="btn btn-danger" onclick="removeAccountByUuid('${account.uuid}')">Remove</button>
+                </div>
+            `;
+            root.appendChild(row);
+        });
+    }
+
+    async function setActiveAccountFromSelect() {
+        const uuid = document.getElementById('accountSelect').value;
+        await setActiveAccount(uuid);
+    }
+
+    async function setActiveAccount(uuid) {
+        await ipcRenderer.invoke('set-active-account', uuid);
+        await init();
+    }
+
+    async function removeAccountByUuid(uuid) {
+        await ipcRenderer.invoke('remove-account', uuid);
+        await init();
+    }
+
+    async function removeActiveAccount() {
+        const uuid = document.getElementById('accountSelect').value;
+        if (!uuid) return;
+        if (!confirm('Remove selected account?')) return;
+        await removeAccountByUuid(uuid);
+    }
+
+    async function login() {
+        await ipcRenderer.invoke('ms-login');
+        await init();
+    }
+
+    async function launch(idx) {
+        if (!data.msToken) {
+            alert('Add/select an account first.');
+            switchTab('accounts');
+            return;
+        }
+
+        const inst = withDefaults(data.instances[idx]);
+        activeLaunchIdx = idx;
+        renderInstances();
+
+        const fill = document.getElementById(`fill-${idx}`);
+        const status = document.getElementById(`status-${idx}`);
+        if (fill) fill.classList.add('indeterminate');
+        if (status) status.innerText = 'Preparing launch...';
+
+        if (inst.showConsoleOnLaunch) switchTab('logs');
+        ipcRenderer.send('launch-game', { instance: inst, auth: data.msToken });
+    }
+
+    function switchModalTab(tab) {
+        modalTab = tab;
+        ['general', 'java', 'commands', 'content'].forEach((name) => {
+            document.getElementById(`m-tab-${name}`).classList.toggle('active', name === tab);
+            document.getElementById(`m-panel-${name}`).classList.toggle('active', name === tab);
+        });
+    }
+
+    function setContentType(type) {
+        currentContentType = type;
+        ['mods', 'resourcepacks', 'shaderpacks'].forEach((name) => {
+            document.getElementById(`content-tab-${name}`).classList.toggle('active', name === type);
+        });
+        refreshSelectedContent();
+    }
+
+    function renderContentTable() {
+        const body = document.getElementById('contentBody');
+        body.innerHTML = '';
+
+        currentContentFiles.forEach((entry) => {
+            const row = document.createElement('div');
+            row.className = `trow${selectedContentFile === entry.name ? ' active' : ''}`;
+            row.innerHTML = `
+                <div>${escapeHtml(entry.name)}</div>
+                <div>${formatBytes(entry.size)}</div>
+                <div>${formatDate(entry.modifiedAt)}</div>
+            `;
+            row.onclick = () => {
+                selectedContentFile = entry.name;
+                renderContentTable();
+            };
+            body.appendChild(row);
+        });
+    }
+
+    async function refreshSelectedContent() {
+        if (editingIdx === 'new') {
+            currentContentFiles = [];
+            selectedContentFile = null;
+            renderContentTable();
+            return;
+        }
+
+        const inst = data.instances[editingIdx];
+        currentContentFiles = await ipcRenderer.invoke('instance:list-content', {
+            instancePath: inst.path,
+            type: currentContentType
+        });
+        selectedContentFile = null;
+        renderContentTable();
+    }
+
+    async function importSelectedContent() {
+        if (editingIdx === 'new') return alert('Create the instance first.');
+        const inst = data.instances[editingIdx];
+        currentContentFiles = await ipcRenderer.invoke('instance:import-content', {
+            instancePath: inst.path,
+            type: currentContentType
+        });
+        selectedContentFile = null;
+        renderContentTable();
+    }
+
+    async function removeSelectedContent() {
+        if (editingIdx === 'new') return;
+        if (!selectedContentFile) return alert('Select a file first.');
+
+        const inst = data.instances[editingIdx];
+        currentContentFiles = await ipcRenderer.invoke('instance:remove-content', {
+            instancePath: inst.path,
+            type: currentContentType,
+            fileName: selectedContentFile
+        });
+
+        selectedContentFile = null;
+        renderContentTable();
+    }
+
+    async function openSelectedContentFolder() {
+        if (editingIdx === 'new') return;
+        const inst = data.instances[editingIdx];
+        await ipcRenderer.invoke('instance:open-content-folder', {
+            instancePath: inst.path,
+            type: currentContentType
+        });
+    }
+
+    async function chooseIconForInstance() {
+        if (editingIdx === 'new') {
+            alert('Save the instance first, then set a custom icon.');
+            return;
+        }
+
+        const inst = data.instances[editingIdx];
+        await ipcRenderer.invoke('set-instance-icon', { instancePath: inst.path });
+        await init();
+        showModal(editingIdx);
+    }
+
+    function showModal(idx) {
+        editingIdx = idx;
+        switchModalTab('general');
+        setContentType('mods');
+
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('modal').style.display = 'block';
+
+        const verRow = document.getElementById('versionRow');
+        const delBtn = document.getElementById('deleteBtn');
+        const openFolderBtn = document.getElementById('openFolderBtn');
+        const iconBtn = document.getElementById('iconBtn');
+        const iconHint = document.getElementById('iconHint');
+        const importModpackBtn = document.getElementById('importModpackBtn');
+        const contentDisabledHint = document.getElementById('contentDisabledHint');
+
+        if (idx === 'new') {
+            document.getElementById('modalTitle').innerText = 'New Instance';
+            document.getElementById('mName').value = 'new_instance';
+            document.getElementById('mFabric').checked = true;
+            document.getElementById('mMemMin').value = '2G';
+            document.getElementById('mMemMax').value = '4G';
+            document.getElementById('mJvmArgs').value = '';
+            document.getElementById('mPreLaunchCommand').value = '';
+            document.getElementById('mPostExitCommand').value = '';
+            document.getElementById('mWrapperCommand').value = '';
+            document.getElementById('mEnvVars').value = '';
+            document.getElementById('mShowConsoleOnLaunch').checked = false;
+            document.getElementById('mShowConsoleOnCrash').checked = true;
+            document.getElementById('mCloseLauncherOnLaunch').checked = false;
+
+            verRow.style.display = 'block';
+            delBtn.style.display = 'none';
+            openFolderBtn.style.display = 'none';
+            iconBtn.disabled = true;
+            iconHint.style.display = 'block';
+            importModpackBtn.style.display = 'inline-block';
+            contentDisabledHint.style.display = 'block';
+            return;
+        }
+
+        const inst = withDefaults(data.instances[idx]);
+
+        document.getElementById('modalTitle').innerText = `Edit Instance: ${inst.name}`;
+        document.getElementById('mName').value = inst.name;
+        document.getElementById('mFabric').checked = !!inst.fabric;
+        document.getElementById('mMemMin').value = inst.memoryMin;
+        document.getElementById('mMemMax').value = inst.memoryMax;
+        document.getElementById('mJvmArgs').value = inst.jvmArgs || '';
+        document.getElementById('mPreLaunchCommand').value = inst.preLaunchCommand || '';
+        document.getElementById('mPostExitCommand').value = inst.postExitCommand || '';
+        document.getElementById('mWrapperCommand').value = inst.wrapperCommand || '';
+        document.getElementById('mEnvVars').value = serializeEnvVars(inst.envVars || {});
+        document.getElementById('mShowConsoleOnLaunch').checked = !!inst.showConsoleOnLaunch;
+        document.getElementById('mShowConsoleOnCrash').checked = inst.showConsoleOnCrash !== false;
+        document.getElementById('mCloseLauncherOnLaunch').checked = !!inst.closeLauncherOnLaunch;
+
+        verRow.style.display = 'none';
+        delBtn.style.display = 'inline-block';
+        openFolderBtn.style.display = 'inline-block';
+        iconBtn.disabled = false;
+        iconHint.style.display = 'none';
+        importModpackBtn.style.display = 'none';
+        contentDisabledHint.style.display = 'none';
+        refreshSelectedContent();
+    }
+
+    function closeModal() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    async function saveInstance() {
+        const name = document.getElementById('mName').value.trim();
+        if (!name) return alert('Name is required');
+
+        const fabric = document.getElementById('mFabric').checked;
+        const loaderType = fabric ? 'fabric' : 'vanilla';
+        const memoryMin = document.getElementById('mMemMin').value.trim() || '2G';
+        const memoryMax = document.getElementById('mMemMax').value.trim() || '4G';
+        const jvmArgs = document.getElementById('mJvmArgs').value.trim();
+        const preLaunchCommand = document.getElementById('mPreLaunchCommand').value.trim();
+        const postExitCommand = document.getElementById('mPostExitCommand').value.trim();
+        const wrapperCommand = document.getElementById('mWrapperCommand').value.trim();
+        const envVars = parseEnvVars(document.getElementById('mEnvVars').value);
+
+        const showConsoleOnLaunch = document.getElementById('mShowConsoleOnLaunch').checked;
+        const showConsoleOnCrash = document.getElementById('mShowConsoleOnCrash').checked;
+        const closeLauncherOnLaunch = document.getElementById('mCloseLauncherOnLaunch').checked;
+
+        let version;
+        let oldPath = null;
+
+        if (editingIdx === 'new') {
+            version = document.getElementById('mVer').value;
+        } else {
+            version = data.instances[editingIdx].version;
+            oldPath = data.instances[editingIdx].path;
+        }
+
+        const instancePath = path.join(data.path, 'instances', name.replace(/\s/g, '_'));
+
+        const config = {
+            name,
+            version,
+            loaderType,
+            fabric,
+            memoryMin,
+            memoryMax,
+            jvmArgs,
+            preLaunchCommand,
+            postExitCommand,
+            wrapperCommand,
+            showConsoleOnLaunch,
+            showConsoleOnCrash,
+            closeLauncherOnLaunch,
+            envVars
+        };
+
+        await ipcRenderer.invoke('save-instance', { instancePath, config, oldPath });
+        closeModal();
+        await init();
+    }
+
+    async function deleteInstance() {
+        if (editingIdx === 'new') return;
+        if (!confirm('Delete this instance?')) return;
+
+        await ipcRenderer.invoke('delete-instance', data.instances[editingIdx].path);
+        closeModal();
+        await init();
+    }
+
+    async function openInstanceFolder() {
+        if (editingIdx === 'new') return;
+        await ipcRenderer.invoke('open-folder', data.instances[editingIdx].path);
+    }
+
+    async function importModpackQuick() {
+        const picked = await ipcRenderer.invoke('pick-modpack-file');
+        if (!picked) return;
+
+        try {
+            await ipcRenderer.invoke('create-instance-from-modpack', { modpackPath: picked });
+            await init();
+        } catch (err) {
+            alert(err.message || String(err));
+        }
+    }
+
+    async function importModpackFromModal() {
+        if (editingIdx !== 'new') return;
+
+        const picked = await ipcRenderer.invoke('pick-modpack-file');
+        if (!picked) return;
+
+        try {
+            await ipcRenderer.invoke('create-instance-from-modpack', { modpackPath: picked });
+            closeModal();
+            await init();
+        } catch (err) {
+            alert(err.message || String(err));
+        }
+    }
+
+    ipcRenderer.on('progress', (e, d) => {
+        if (activeLaunchIdx === -1) return;
+
+        const fromTask = Number.isFinite(d?.task) && Number.isFinite(d?.total) && d.total > 0
+            ? Math.round((d.task / d.total) * 100)
+            : null;
+        const fromPercent = Number.isFinite(d?.percent) ? Math.round(d.percent) : null;
+        const pct = fromTask ?? fromPercent;
+
+        const fill = document.getElementById(`fill-${activeLaunchIdx}`);
+        const status = document.getElementById(`status-${activeLaunchIdx}`);
+
+        if (fill && Number.isFinite(pct)) {
+            fill.classList.remove('indeterminate');
+            const clamped = Math.max(0, Math.min(100, pct));
+            fill.style.width = `${clamped}%`;
+        }
+
+        if (status) {
+            if (Number.isFinite(pct)) {
+                status.innerText = `${d.type || 'Progress'}: ${Math.max(0, Math.min(100, pct))}%`;
+            } else {
+                status.innerText = d?.type ? `${d.type}...` : 'Starting game...';
+            }
+        }
+    });
+
+    ipcRenderer.on('log', (e, msg) => {
+        logs.push(String(msg));
+        if (logs.length > 5000) logs = logs.slice(-5000);
+        renderLogPanel();
+
+        const active = activeLaunchIdx !== -1 ? withDefaults(data.instances[activeLaunchIdx]) : null;
+        if (active && active.showConsoleOnCrash && String(msg).toLowerCase().includes('crash')) {
+            switchTab('logs');
+        }
+    });
+
+    ipcRenderer.on('game-closed', () => {
+        activeLaunchIdx = -1;
+        renderInstances();
+    });
+
+    fetchVersions().then(init);
+</script>
+</body>
+</html>

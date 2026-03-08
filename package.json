@@ -1,0 +1,21 @@
+{
+  "name": "my-minecraft-launcher",
+  "version": "1.0.0",
+  "description": "A custom Minecraft launcher built with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "axios": "^1.13.6",
+    "electron": "^28.0.0",
+    "electron-store": "^8.1.0",
+    "fs-extra": "^11.3.4",
+    "minecraft-launcher-core": "^3.18.2",
+    "msmc": "^5.0.5"
+  }
+}
