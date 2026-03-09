@@ -1,7 +1,7 @@
 <div align="center">
   <img src="static/favicon.png" width="200px" height="auto" />
   <h1>kebab-launcher v0.1.4</h1>
-  <b>Hyperfast mc launcher</b>
+  <b>Hyperfast, kebab mc launcher</b>
   <hr />
   <br />
 </div>
