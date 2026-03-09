@@ -1,7 +1,7 @@
 {
-  "name": "my-minecraft-launcher",
+  "name": "kebab-launcher",
   "version": "1.0.0",
-  "description": "A custom Minecraft launcher built with Electron",
+  "description": "kebab MC launcher",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
