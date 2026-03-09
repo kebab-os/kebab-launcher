@@ -21,3 +21,9 @@ Follow these steps in order to install kebab-launcher onto your device, ready to
 ## License
 
 kebab-launcher is under the [MIT License](LICENSE).
+
+<br /><br />
+<div align="right">
+  <hr />
+  <sub>kebab-launcher</sub>
+</div>
