@@ -33,6 +33,11 @@ npm start
 Following these steps should install and start kebab-launcher. If you want to open kebab-launcher a second time after installing it, don't do all the steps again, just repeat step 3 (`npm start`) as long as you are in the `src` directory, inside the kebab-launcher repo.
 
 
+## Reporting issues
+
+To report an issues related to this repo, [fill out an issue](https://github.com/kebab-os/kebab-launcher/issues/new/choose) to open
+
+
 ## License
 
 kebab-launcher is under the [MIT License](LICENSE).
