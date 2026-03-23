@@ -38,6 +38,11 @@ Following these steps should install and start kebab-launcher. If you want to op
 To report an issues related to this repo, [fill out an issue](https://github.com/kebab-os/kebab-launcher/issues/new/choose) to open
 
 
+## Disclaimer
+
+<sub>NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT</sub>
+
+
 ## License
 
 kebab-launcher is under the [MIT License](LICENSE).
